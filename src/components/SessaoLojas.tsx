@@ -21,7 +21,6 @@ const SessaoLojas = () => {
   return (
     <section className="py-16 md:py-24 bg-secondary">
       <div className="container mx-auto px-4">
-        {/* Título */}
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-5xl font-bold text-primary mb-4">
             Procure a nossa farmácia em sua cidade!
@@ -31,17 +30,17 @@ const SessaoLojas = () => {
           </p>
         </div>
 
-        {/* Lista de cidades */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
           {cities.map((city) => {
             const slug = city
               .toLowerCase()
               .normalize("NFD")
-              .replace(/[\u0300-\u036f]/g, "") // remove acentos
-              .replace(/\s+/g, "-"); // substitui espaços por hífen
+              .replace(/[\u0300-\u036f]/g, "")
+              .replace(/\s+/g, "-");
 
             return (
-              <Link key={city} to={`/unidades/${slug}`}>
+              /* AJUSTE: O link agora aponta para /unidades#slug-da-cidade */
+              <Link key={city} to={`/unidades#${slug}`}>
                 <Card className="p-6 text-center hover:shadow-medium transition-all hover:scale-105 cursor-pointer bg-card">
                   <MapPin className="h-8 w-8 mx-auto mb-3 text-accent" />
                   <h3 className="text-lg font-semibold text-foreground">{city}</h3>
@@ -51,12 +50,11 @@ const SessaoLojas = () => {
           })}
         </div>
 
-        {/* Botão de ver todas */}
-        <div className="te'xt-center">
+        <div className="flex justify-center mt-12">
           <Button
             asChild
             size="lg"
-            className="bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-medium"
+            className="bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-medium px-10 py-6 text-lg font-black rounded-xl"
           >
             <Link to="/unidades">Ver Todas as Unidades</Link>
           </Button>

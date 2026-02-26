@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Linkedin, Instagram } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -6,7 +6,19 @@ import logo from "@/assets/logo.png";
 
 const HeaderNav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
+
+  // Verifica se o usuário está na Página Inicial
+  const isHomePage = location.pathname === "/";
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -19,148 +31,96 @@ const HeaderNav = () => {
     { name: "WebMail", path: "/WebMail" },
   ];
 
-  const handleContactClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (location.pathname === "/") {
-      e.preventDefault();
-      const element = document.getElementById("contato");
-      element?.scrollIntoView({ behavior: "smooth" });
-    }
-  };
+  // Lógica de Estilo do Header
+  // Se não for a home, fica sempre branco. Se for a home, depende do scroll.
+  const headerBackground = !isHomePage || isScrolled
+    ? "bg-white shadow-md py-2 border-b border-slate-200"
+    : "bg-transparent py-4 border-b border-transparent";
+
+  const textColor = !isHomePage || isScrolled
+    ? "text-slate-900"
+    : "text-white";
+
+  const logoTitleColor = !isHomePage || isScrolled
+    ? "text-[#004bb4]"
+    : "text-white";
 
   return (
-    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b shadow-soft">
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${headerBackground}`}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
-          {/* Logo */}
+
+          {/* Logo e Títulos */}
           <Link to="/" className="flex items-center space-x-3 transition-transform hover:scale-105">
-            <img src={logo} alt="Farmácia Preço Popular" className="h-12 w-auto" />
+            <img src={logo} alt="Logo" className="h-12 w-auto" />
             <div className="hidden md:block">
-              <h1 className="text-xl font-bold text-primary">Farmácia Preço Popular</h1>
-              <p className="text-xs text-accent font-semibold">Remédio a Baixo Custo</p>
+              <h1 className={`text-xl font-bold transition-colors ${logoTitleColor}`}>
+                Farmácia Preço Popular
+              </h1>
+              <p className={`text-xs font-semibold opacity-90 ${!isHomePage || isScrolled ? "text-red-600" : "text-white"}`}>
+                Remédio a Baixo Custo
+              </p>
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
+          {/* Navegação Desktop */}
           <nav className="hidden lg:flex items-center space-x-1">
-            {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                onClick={link.path.startsWith("#") ? handleContactClick : undefined}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                  isActive(link.path)
-                    ? "bg-primary text-primary-foreground"
-                    : "text-foreground hover:bg-secondary"
-                }`}
-              >
-                {link.name}
-              </Link>
-            ))}
-          </nav>
+            {navLinks.map((link) => {
+              const active = isActive(link.path);
 
-          {/* Social Icons */}
-          <div className="hidden lg:flex items-center space-x-3">
-            <Button
-              variant="ghost"
-              size="icon"
-              asChild
-              className="hover:bg-primary hover:text-primary-foreground transition-all"
-            >
-              <a
-                href="https://www.linkedin.com/company/farmácia-preço-popular-fpp"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Linkedin"
-              >
-                <Linkedin className="h-5 w-5" />
-              </a>
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              asChild
-              className="hover:bg-accent hover:text-accent-foreground transition-all"
-            >
-              <a
-                href="https://www.instagram.com/farmaciaprecopopular.oficial/"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Instagram"
-              >
-                <Instagram className="h-5 w-5" />
-              </a>
-            </Button>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="lg:hidden"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="Menu"
-          >
-            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </Button>
-        </div>
-
-        {/* Mobile Menu */}
-        {isMenuOpen && (
-          <nav className="lg:hidden py-4 border-t animate-fade-in">
-            <div className="flex flex-col space-y-2">
-              {navLinks.map((link) => (
+              return (
                 <Link
                   key={link.path}
                   to={link.path}
-                  onClick={(e) => {
-                    setIsMenuOpen(false);
-                    if (link.path.startsWith("#")) handleContactClick(e);
-                  }}
-                  className={`px-4 py-3 rounded-lg text-sm font-medium transition-all ${
-                    isActive(link.path)
-                      ? "bg-primary text-primary-foreground"
-                      : "text-foreground hover:bg-secondary"
-                  }`}
+                  className={`px-4 py-2 rounded-lg text-sm font-bold transition-all border-2 ${active
+                      ? (isHomePage && !isScrolled
+                        ? "bg-white text-[#004bb4] border-white" // Na home transparente
+                        : "bg-[#004bb4] text-white border-[#004bb4]") // Nas outras abas (seu print)
+                      : `${textColor} border-transparent hover:bg-black/5`
+                    }`}
                 >
                   {link.name}
                 </Link>
-              ))}
-              <div className="flex items-center space-x-3 px-4 pt-2">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  asChild
-                  className="hover:bg-primary hover:text-primary-foreground"
-                >
-                  <a
-                    href="https://www.linkedin.com/company/farmácia-preço-popular-fpp"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Linkedin"
-                  >
-                    <Linkedin className="h-5 w-5" />
-                  </a>
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  asChild
-                  className="hover:bg-accent hover:text-accent-foreground"
-                >
-                  <a
-                    href="https://www.instagram.com/farmaciaprecopopular.oficial/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Instagram"
-                  >
-                    <Instagram className="h-5 w-5" />
-                  </a>
-                </Button>
-              </div>
-            </div>
+              );
+            })}
           </nav>
-        )}
+
+          {/* Redes Sociais */}
+          <div className="hidden lg:flex items-center space-x-2">
+            <Button variant="ghost" size="icon" asChild className={textColor}>
+              <a href="#"><Linkedin size={20} /></a>
+            </Button>
+            <Button variant="ghost" size="icon" asChild className={textColor}>
+              <a href="#"><Instagram size={20} /></a>
+            </Button>
+          </div>
+
+          {/* Mobile Button */}
+          <button
+            className={`lg:hidden p-2 ${textColor}`}
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+          </button>
+        </div>
       </div>
+
+      {/* Menu Mobile */}
+      {isMenuOpen && (
+        <div className="lg:hidden bg-white border-t p-4 flex flex-col space-y-2 shadow-xl">
+          {navLinks.map((link) => (
+            <Link
+              key={link.path}
+              to={link.path}
+              onClick={() => setIsMenuOpen(false)}
+              className={`px-4 py-3 rounded-lg text-sm font-bold ${isActive(link.path) ? "bg-[#004bb4] text-white" : "text-slate-900"
+                }`}
+            >
+              {link.name}
+            </Link>
+          ))}
+        </div>
+      )}
     </header>
   );
 };

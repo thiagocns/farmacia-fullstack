@@ -118,32 +118,32 @@ const Footer = () => {
 
       {/* Modal */}
       {isModalOpen && (
-  <div
-    className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70"
-    onClick={() => setIsModalOpen(false)}
-  >
-    <div
-      className="relative w-full max-w-3xl mx-4 bg-white rounded-lg shadow-lg overflow-hidden"
-      onClick={(e) => e.stopPropagation()}
-    >
-      {/* Botão fechar */}
-      <button
-        onClick={() => setIsModalOpen(false)}
-        className="absolute top-2 right-2 z-10 text-white bg-red-600 hover:bg-red-700 rounded-full w-8 h-8 flex items-center justify-center transition-all"
-        aria-label="Fechar"
-      >
-        ✕
-      </button>
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70"
+          onClick={() => setIsModalOpen(false)}
+        >
+          <div
+            className="relative w-full max-w-3xl mx-4 bg-white rounded-lg shadow-lg overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Botão fechar */}
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="absolute top-2 right-2 z-10 text-white bg-red-600 hover:bg-red-700 rounded-full w-8 h-8 flex items-center justify-center transition-all"
+              aria-label="Fechar"
+            >
+              ✕
+            </button>
 
-      {/* Imagem Responsiva */}
-      <img
-        src={CompraProgramadaImg}
-        alt="Compra Programada"
-        className="w-full h-auto object-contain max-h-[90vh]"
-      />
-    </div>
-  </div>
-)}
+            {/* Imagem Responsiva */}
+            <img
+              src={CompraProgramadaImg}
+              alt="Compra Programada"
+              className="w-full h-auto object-contain max-h-[90vh]"
+            />
+          </div>
+        </div>
+      )}
 
     </footer>
   );

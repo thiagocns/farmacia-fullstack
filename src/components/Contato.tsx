@@ -8,9 +8,6 @@ import { useToast } from "@/hooks/use-toast";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 
 const Contato = () => {
-  <section id="contato">
-  <Contato />
-</section>
   const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: "",
@@ -22,7 +19,6 @@ const Contato = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Basic validation
     if (!formData.name || !formData.email || !formData.message) {
       toast({
         title: "Campos obrigatórios",
@@ -32,7 +28,6 @@ const Contato = () => {
       return;
     }
 
-    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       toast({
@@ -43,13 +38,11 @@ const Contato = () => {
       return;
     }
 
-    // Success
     toast({
       title: "Mensagem enviada!",
       description: "Em breve nosso farmacêutico entrará em contato.",
     });
 
-    // Reset form
     setFormData({
       name: "",
       email: "",
@@ -68,7 +61,8 @@ const Contato = () => {
   };
 
   return (
-    <section id="contato" className="py-16 md:py-24 bg-gradient-primary">
+    /* O SEGREDO ESTÁ AQUI: scroll-mt-32 (ajuste o número conforme a altura do seu header) */
+    <section id="contato" className="py-16 md:py-24 bg-gradient-primary scroll-mt-32">
       <div className="container mx-auto px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
@@ -207,19 +201,21 @@ const Contato = () => {
                     </div>
                   </div>
                 </div>
-                <br /><br />
-                <Button
-                  size="lg"
-                  className="w-full mt-6 bg-[#25D366] hover:bg-[#20BA5A] text-white shadow-medium"
-                  onClick={() => window.open('https://wa.me/557398132909', '_blank')}
-                >
-                  <MessageCircle className="mr-2 h-5 w-5" />
-                  Abrir WhatsApp
-                </Button>
 
-                <p className="text-xs text-muted-foreground text-center mt-4">
-                  Clique no botão acima para iniciar uma conversa
-                </p>
+                <div className="mt-6">
+                  <Button
+                    size="lg"
+                    className="w-full bg-[#25D366] hover:bg-[#20BA5A] text-white shadow-medium"
+                    onClick={() => window.open('https://wa.me/557398132909', '_blank')}
+                  >
+                    <MessageCircle className="mr-2 h-5 w-5" />
+                    Abrir WhatsApp
+                  </Button>
+
+                  <p className="text-xs text-muted-foreground text-center mt-4">
+                    Clique no botão acima para iniciar uma conversa
+                  </p>
+                </div>
               </CardContent>
             </Card>
           </div>
